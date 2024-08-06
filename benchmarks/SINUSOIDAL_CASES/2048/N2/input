@@ -1,0 +1,30 @@
+nx,ny,nz,nc, gpumpi
+   2048,2048,2048,0,1
+nsteps, iostep, istart, kstop, isave
+  20, 35, 0, -1, -1
+entime, time0
+0., 0.
+kinit
+-2,-2,-2
+fninit
+directory
+indir_fn
+filename
+irz
+-8
+viscos
+2.8e-3
+mean velocity gradients (a11,a22,a33,shear)
+0., 0., 0., 0.
+metric factors (beta1,beta2,beta3,bet12)
+1., 1., 1., 0.
+cfl, dt
+1.885, 0.0005
+dtout,tfout
+0., 0.
+dtsave,tfsave
+0., 0.
+kshift
+4
+random number seed
+712930187

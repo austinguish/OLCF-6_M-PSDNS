@@ -1,0 +1,56 @@
+
+MACHINE = IBMXL
+
+
+include makefile_pieces/makefile_initialization 
+
+
+#######################################################################
+ifeq ($(MACHINE),IBMXL) ############################################
+# use -d option to generate preprocessed files
+  FF = mpif90
+  CC = mpicc
+  CFLAGS += -DNUS_XCOMP
+
+  FFLAGS = -qstrict -qfree=f90
+  FFLAGS += -O3 -qarch=pwr9 -qtune=pwr9 -qtgtarch=sm_70 -qhot
+  #FFLAGS += -g -W@,"-v" -qsigtrap -qcheck #-d
+  #FFLAGS += -qsource -qreport=smplist
+
+  CPP = /lib/cpp -traditional
+
+  ifneq (,$(findstring OPENMP,$(CPPFLAGS)))
+    FFLAGS += -qsmp=omp -qoffload -qcuda
+  endif
+
+  ifneq (,$(findstring DOUBLE_PREC,$(CPPFLAGS)))
+    FFLAGS += -qautodbl=dbl4
+  endif
+
+  # Build with HIP for a specific GPU Vendor
+  CPPFLAGS += -D__HIP_PLATFORM_NVIDIA__
+
+  # hipfort paths ... NEEDS TO BE CUSTOMIZED
+  HIP_BASE_PATH=/gpfs/alpine/stf006/world-shared/nichols/HIPFORT/INSTALLATION/hipfort_v5.1.0/IBM-XL
+  HIP_LIB_PATH=$(HIP_BASE_PATH)/lib
+  HIP_INC_PATH=$(HIP_BASE_PATH)/include/nvptx
+
+  OTHER_LIBS += -L$(HIP_LIB_PATH) -L$(OLCF_CUDA_ROOT)/lib64
+  #OTHER_LIBS += -lhipfft -lm -lstdc++ -lhipfort-nvptx
+  OTHER_LIBS += -lhipfort-nvptx -lcufft -lcudart -lnvToolsExt
+
+  OTHER_INC += -I$(HIP_INC_PATH)
+  #OTHER_INC += -I$(OLCF_CUDA_ROOT)/include/
+
+  FFLAGS90 = $(FFLAGS)
+
+  MOD_BIN = -qmoddir=$(OBJBIN) -I$(OBJBIN)/
+endif
+#######################################################################
+
+
+include makefile_pieces/makefile_build_rules
+
+
+include makefile_pieces/makefile_basic_rules
+

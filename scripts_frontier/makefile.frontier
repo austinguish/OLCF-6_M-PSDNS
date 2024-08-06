@@ -1,0 +1,65 @@
+
+MACHINE = Frontier
+
+
+include makefile_pieces/makefile_initialization 
+
+
+#######################################################################
+ifeq ($(MACHINE),Frontier) ############################################
+  FF = ftn #-C
+  FFLAGS = -I. -O3 -N132 -hacc_model=no_fast_addr -hacc_model=auto_async_none -hflex_mp=strict -hfp2=noapprox
+  #FFLAGS += -eo
+
+# Use next line for debugging if needed
+  #FFLAGS = -I. -hflex_mp=strict -g -Rcbs -hfp2=noapprox -N132 -hacc_model=no_fast_addr -hacc_model=auto_async_none
+  #FFLAGS += -eo
+
+  ifneq (,$(findstring OPENMP,$(CPPFLAGS)))
+    FFLAGS += -homp,thread2
+  else
+    FFLAGS += -hnoomp
+  endif
+
+  ifneq (,$(findstring DOUBLE_PREC,$(CPPFLAGS)))
+    FFLAGS += -sreal64
+  endif
+
+  CPP = /lib/cpp -traditional
+
+  # handle vendor-specific compiler options
+  CPPFLAGS += -DCRAY_CCE
+  #CPPFLAGS += -DCALL_FLUSH
+  CPPFLAGS += -DUSE_MAP
+  
+  # hipfort paths --- need to be customized by the user
+  HIP_BASE_PATH=/ccs/proj/tur120/GESTS/HIPFORT/INSTALLATION/hipfort_v5.4.0_CCE-15.0.0
+  HIP_LIB_PATH=$(HIP_BASE_PATH)/lib
+  HIP_INC_PATH=$(HIP_BASE_PATH)/include/hipfort/amdgcn
+
+  FFLAGS += -target-accel=amd_gfx90a # MI250x
+  FFLAGS += "-DHIPFORT_ARCH=\"amdgcn\""
+
+  # Build with HIP for a specific GPU Vendor
+  CPPFLAGS += -D__HIP_PLATFORM_AMD__
+    
+  ROCM_LIB_PATH=${OLCF_ROCM_ROOT}/lib
+  ROCM_INC_PATH=${OLCF_ROCM_ROOT}/include
+
+  OTHER_LIBS += -L$(HIP_LIB_PATH) -L$(ROCM_LIB_PATH)
+  OTHER_LIBS += -lhipfft -lm -lstdc++ -lamdhip64 -lhipfort-amdgcn -lroctracer64 -lhsa-runtime64
+
+  OTHER_INC += -I$(ROCM_INC_PATH) -I$(HIP_INC_PATH)
+
+  MOD_BIN = -module $(OBJBIN) -I$(OBJBIN)/
+  FFLAGS90 = $(FFLAGS)
+endif
+#######################################################################
+
+
+include makefile_pieces/makefile_build_rules
+
+
+include makefile_pieces/makefile_basic_rules
+
+

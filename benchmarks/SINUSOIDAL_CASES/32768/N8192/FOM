@@ -1,0 +1,10 @@
+Times averaged over    20 compute-only timesteps and over   65536 mpi ranks
+  
+    FFT (s)     Pack and Unpack (s)       MPI (s)       Other (s)       Total (s)
+----------------------------------------------------------------------------------
+    2.2912            0.4336             15.3144         0.4883         18.5274
+----------------------------------------------------------------------------------
+  
+Average runtime per timestep =    18.5274
+Problem size = nx*ny*nz =       35184372088832.00
+FOM = (problem size)/(average runtime) = 1.8990E+12

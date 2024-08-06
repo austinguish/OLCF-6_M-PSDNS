@@ -1,0 +1,8 @@
+           after mpisetup- Used=   0.19
+            after com_set- Used=   0.21
+      after allocating un- Used=  11.94
+       after allocating u- Used=  31.47
+           after comp_set- Used=  31.47
+          after comsp_set- Used=  31.47
+             after epfftw- Used=  33.72
+   before OMP in main.F90- Used=  33.78

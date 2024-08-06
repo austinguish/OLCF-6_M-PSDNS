@@ -1,0 +1,54 @@
+MACHINE = X86_64
+
+include makefile_pieces/makefile_initialization
+
+#######################################################################
+ifeq ($(MACHINE),X86_64)
+############################################
+
+FF = mpif90
+CC = mpicc
+
+CFLAGS += -DNUS_GCC
+
+FFLAGS = -ffree-form -ffree-line-length-none
+FFLAGS += -O3 -march=native -mtune=native
+#FFLAGS += -g -fbacktrace -fbounds-check #Debugging flags
+
+CPP = /lib/cpp -traditional
+
+ifneq (,$(findstring OPENMP,$(CPPFLAGS)))
+  FFLAGS += -fopenmp
+endif
+
+ifneq (,$(findstring DOUBLE_PREC,$(CPPFLAGS)))
+  FFLAGS += -fdefault-real-8 -fdefault-double-8
+endif
+
+# Build with HIP for NVIDIA GPU
+CPPFLAGS += -D__HIP_PLATFORM_NVIDIA__
+
+# hipfort paths ... NEEDS TO BE CUSTOMIZED
+HIP_BASE_PATH=/tmp/hipfort/build
+HIP_LIB_PATH=$(HIP_BASE_PATH)/lib
+HIP_INC_PATH=$(HIP_BASE_PATH)/include/hipfort/nvptx
+
+# CUDA paths ... NEEDS TO BE CUSTOMIZED
+CUDA_PATH=/usr/local/cuda
+CUDA_LIB_PATH=$(CUDA_PATH)/lib64
+CUDA_INC_PATH=$(CUDA_PATH)/include
+
+OTHER_LIBS += -L$(HIP_LIB_PATH) -L$(CUDA_LIB_PATH)
+OTHER_LIBS += -lhipfort-nvptx -lcufft -lcudart -lnvToolsExt
+
+OTHER_INC += -I$(HIP_INC_PATH) -I$(CUDA_INC_PATH)
+
+FFLAGS90 = $(FFLAGS)
+
+MOD_BIN = -J $(OBJBIN) -I$(OBJBIN)/
+
+endif
+#######################################################################
+
+include makefile_pieces/makefile_build_rules
+include makefile_pieces/makefile_basic_rules

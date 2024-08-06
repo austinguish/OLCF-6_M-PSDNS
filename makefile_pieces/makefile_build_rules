@@ -1,0 +1,47 @@
+#######################################################################
+
+
+
+SRCDIR = .srcmake
+
+LDFLAGS= $(FFLAGS) $(LFLAGS) #$(FLAGS_PROF_DEBUG)
+INCLUDE= $(OTHER_INC)
+
+VPATH += src 
+
+OBJEUL = module.o main.o param_set.o com_set.o comp_set.o comsp_set.o input.o mpisetup.o procinfo.o abrt.o masks.o time_stamp.o time_stamp0.o pfield.o blanks.o openf.o sptr_omp.o eulout.o step.o waveno.o ranseq.o ranu.o shifts.o phshift_inplace.o write_timings.o itransform_vel.o sptvar_omp.o mpistat_setup.o CPUmeminfo.o incond.o
+
+# core FFT pieces
+OBJFFT = epfftw.o xktran_gpu.o xkcomm1_gpu.o xkcomm2_gpu.o kxtran_gpu.o kxcomm1_gpu.o kxcomm2_gpu.o 
+OBJGPU = sptvar_gpu.o sptr_gpu.o field_update_vel.o transform.o wavespace_vel.o realspace_vel.o rksubstep.o hipcheck.o GPUmeminfo.o
+
+EXEC = DNS_PEN_GPU_p4.x
+ifneq (,$(findstring DOUBLE_PREC,$(CPPFLAGS)))
+  EXEC = DNS_PEN_GPU_p8.x
+endif
+
+OBJSRC = $(addprefix $(OBJBIN)/, $(OBJEUL) $(OBJFFT) $(OBJGPU) )
+
+$(EXEC): $(OBJSRC)
+	$(FF) $(LDFLAGS) -o $(EXEC) $(OBJSRC) $(INCLUDE) $(OTHER_LIBS)
+
+$(OBJSRC) : module.F90
+ifneq (,$(findstring LAG,$(CPPFLAGS)))
+endif
+
+ifneq (exists, $(shell if [ -d $(SRCDIR) ]; then echo exists; fi))
+		@echo "Error: $(SRCDIR) folders have not been created"
+		@echo "Use the command 'make srcmake'"; exit 1
+endif
+ifndef MACHINE
+		@echo "Error: MACHINE is not defined"; exit 1;
+endif
+
+$(OBJBIN)/%.o: %.f
+		$(CPP) $(CPPFLAGS) $< $(SRCDIR)/$<
+		$(FF) -c $(FFLAGS) $(INCLUDE) $(SRCDIR)/$< -o $@
+$(OBJBIN)/%.o: %.F90
+		$(CPP) $(CPPFLAGS) $< $(SRCDIR)/$<
+		$(FF) -c $(FFLAGS90) $(INCLUDE) $(SRCDIR)/$< -o $@
+
+

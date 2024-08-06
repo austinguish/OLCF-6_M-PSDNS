@@ -1,0 +1,23 @@
+
+
+#this rule constructs the folder structure needed for the source directories
+srcmake:
+	@echo deleting $(SRCDIR)
+	rm -rf $(SRCDIR)
+	@echo constructing $(SRCDIR)
+
+	mkdir -v -p $(SRCDIR)/src
+	mkdir -v -p $(OBJBIN)
+	@echo "srcmake folders generated: code can now be compiled"
+
+#remove object files
+clean:
+	/bin/rm -rf *.o $(OBJBIN)/*.o *.s *.mod *.x *~ src/*~ 
+	@echo files cleaned
+
+# this removes the srcmake directory in addition to all object files
+cleanest:
+	/bin/rm -rf *.o $(OBJBIN)/*.o *.s *.mod *.x *~ src/*~ 
+	@echo files cleaned
+	rm -rf $(SRCDIR) $(OBJBIN)
+	@echo removed $(SRCDIR) $(OBJBIN)

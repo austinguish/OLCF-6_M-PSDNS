@@ -1,0 +1,11 @@
+           before com_set- Used=   0.0000 Free=  63.9844 Total=  63.9844
+           after procinfo- Used=   0.0000 Free=  63.9844 Total=  63.9844
+            before epfftw- Used=   0.0000 Free=  63.9844 Total=  63.9844
+   before OMP in main.F90- Used=  22.0027 Free=  41.9816 Total=  63.9844
+after OMP TARGET DATA MAP- Used=  22.0027 Free=  41.9816 Total=  63.9844
+      after xktran+sptvar- Used=  22.0028 Free=  41.9816 Total=  63.9844
+              before NONE- Used=  22.0028 Free=  41.9816 Total=  63.9844
+     before time-stepping- Used=  22.0028 Free=  41.9816 Total=  63.9844
+        after TARGET DATA- Used=  22.0028 Free=  41.9816 Total=  63.9844
+after OMP END TARGET DATA- Used=  22.0033 Free=  41.9811 Total=  63.9844
+                    final- Used=   0.5001 Free=  63.4843 Total=  63.9844
