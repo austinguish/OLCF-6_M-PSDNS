@@ -11,7 +11,7 @@ CC = mpicc
 
 CFLAGS += -DNUS_GCC
 
-FFLAGS = -ffree-form -ffree-line-length-none
+FFLAGS = -ffree-form -ffree-line-length-none -fallow-argument-mismatch
 FFLAGS += -O3 -march=native -mtune=native
 #FFLAGS += -g -fbacktrace -fbounds-check #Debugging flags
 
