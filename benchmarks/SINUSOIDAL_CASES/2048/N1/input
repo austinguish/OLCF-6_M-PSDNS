@@ -1,5 +1,5 @@
 nx,ny,nz,nc, gpumpi
-   2048,2048,2048,0,1
+   128,128,128,0,1
 nsteps, iostep, istart, kstop, isave
   20, 35, 0, -1, -1
 entime, time0

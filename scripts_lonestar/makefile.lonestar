@@ -20,7 +20,6 @@ CPP = /lib/cpp -traditional
 ifneq (,$(findstring OPENMP,$(CPPFLAGS)))
   FFLAGS += -fopenmp
 endif
-
 ifneq (,$(findstring DOUBLE_PREC,$(CPPFLAGS)))
   FFLAGS += -fdefault-real-8 -fdefault-double-8
 endif
@@ -29,7 +28,7 @@ endif
 CPPFLAGS += -D__HIP_PLATFORM_NVIDIA__
 
 # hipfort paths ... NEEDS TO BE CUSTOMIZED
-HIP_BASE_PATH=/tmp/hipfort/build
+HIP_BASE_PATH=/usr/local
 HIP_LIB_PATH=$(HIP_BASE_PATH)/lib
 HIP_INC_PATH=$(HIP_BASE_PATH)/include/hipfort/nvptx
 
