@@ -37,6 +37,7 @@
          do y=1,yjsz
 
 #ifdef DOUBLE_PREC
+            
              ierr_hip = hipfftExecZ2Z(hip_plan_z, c_loc(buf1(1,1,y,i)), &
                                       c_loc(buf1(1,1,y,i)), HIPFFT_FORWARD)
 #else

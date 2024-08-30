@@ -1,0 +1,54 @@
+
+MACHINE = NVHPC
+
+
+include makefile_pieces/makefile_initialization 
+
+
+#######################################################################
+ifeq ($(MACHINE),NVHPC) ############################################
+  FF = mpif90
+  CC = mpicc
+
+  FFLAGS = -O3 -tp=broadwell -Mfree 
+  FFLAGS += -Mpreprocess
+
+  CPP = /lib/cpp -traditional
+
+  # Build for a specific GPU Vendor
+  FFLAGS += -D__HIP_PLATFORM_NVIDIA__
+
+  ifneq (,$(findstring OPENMP,$(CPPFLAGS)))
+    FFLAGS += -gpu=sm_75 -mp=gpu
+  endif
+
+  ifneq (,$(findstring DOUBLE_PREC,$(CPPFLAGS)))
+    FFLAGS += -Mr8
+  endif
+
+  # Build with HIP for a specific GPU Vendor
+  CPPFLAGS += -D__HIP_PLATFORM_NVIDIA__
+
+  # hipfort paths ... NEEDS TO BE CUSTOMIZED
+  #HIP_BASE_PATH=/gpfs/alpine2/stf006/world-shared/nichols/HIPFORT/INSTALLATION/hipfort_v5.5.1/NVHPC_23.9
+  HIP_BASE_PATH=/workspace/hipfort_v6.2.0/NVHPC_23.9
+  HIP_LIB_PATH=$(HIP_BASE_PATH)/lib
+  HIP_INC_PATH=$(HIP_BASE_PATH)/include/hipfort/nvptx
+
+  OTHER_LIBS += -L$(HIP_LIB_PATH)
+  OTHER_LIBS += -lhipfort-nvptx -cudalib=cufft
+
+  OTHER_INC += -I$(HIP_INC_PATH)
+
+  FFLAGS90 = $(FFLAGS)
+
+  MOD_BIN = -module=$(OBJBIN) -I$(OBJBIN)/
+endif
+#######################################################################
+
+
+include makefile_pieces/makefile_build_rules
+
+
+include makefile_pieces/makefile_basic_rules
+

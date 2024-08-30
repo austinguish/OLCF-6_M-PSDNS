@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/austinguish/Desktop/2024/2024Summer/Research/OLCF-6_M-PSDNS_benchmark",
+      "program": "/Users/austinguish/Desktop/2024/2024Summer/Research/OLCF-6_M-PSDNS_benchmark/build/Debug/outDebug"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+-tp=px|bulldozer|piledriver|bdver3|bdver4|znver1|znver2|znver3|znver4|sandybridge|haswell|broadwell|skylake|skylakeclient|icelake|icelake-client|cannonlake|cascadelake|cooperlake|tigerlake|alderlake|rocketlake|sapphirerapids|graniterapids|x86-64-v2|x86-64-v3|x86-64-v4|host|native
+                    Select target processor
+    px              Generic Linux/Windows x86_64 Processor.
+    bulldozer       AMD Bulldozer processor
+    piledriver      AMD Piledriver processor
+    bdver3          AMD Family 15h core
+    bdver4          AMD Family 15h core
+    znver1          AMD Zen architecture (Epyc, Ryzen)
+    znver2          AMD Zen 2 architecture (Ryzen 2)
+    znver3          AMD Zen 3 architecture (Ryzen 3)
+    znver4          AMD Zen 4 architecture (Ryzen 4)
+    sandybridge     Intel SandyBridge processor
+    haswell         Intel Haswell processor
+    broadwell       Intel Broadwell processor
+    skylake         Intel Skylake Xeon processor
+    skylakeclient   Intel Skylake Core processor
+    icelake         Intel Ice Lake Xeon processor
+    icelake-client  Intel Ice Lake client processor
+    cannonlake      Intel Cannon Lake Xeon processor
+    cascadelake     Intel Cascade Lake Xeon processor
+    cooperlake      Intel Cooper Lake Xeon processor
+    tigerlake       Intel Tiger Lake Xeon processor
+    alderlake       Intel Alder Lake Xeon processor
+    rocketlake      Intel Rocket Lake Xeon processor
+    sapphirerapids  Intel Sapphire Rapids Xeon processor
+    graniterapids   Intel Granite Rapids Xeon processor
+    x86-64-v2       x86-64 microarchitectural level including SSE
+    x86-64-v3       x86-64 microarchitectural level including AVX2
+    x86-64-v4       x86-64 microarchitectural level including some AVX512 variants
+    host            Link native version of HPC SDK cpu math library
+    native          Alias for -tp host
