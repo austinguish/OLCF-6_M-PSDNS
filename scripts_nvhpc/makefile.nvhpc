@@ -1,54 +1,41 @@
-
 MACHINE = NVHPC
-
-
-include makefile_pieces/makefile_initialization 
-
-
+include makefile_pieces/makefile_initialization
 #######################################################################
 ifeq ($(MACHINE),NVHPC) ############################################
-  FF = mpif90
-  CC = mpicc
+  # Define base paths
+  NVIDIA_HPC_PATH = /opt/nvidia/hpc_sdk/Linux_x86_64/23.9
+  HPCX_PATH = $(NVIDIA_HPC_PATH)/comm_libs/12.2/hpcx/hpcx-2.16
 
-  FFLAGS = -O3 -tp=broadwell -Mfree 
-  FFLAGS += -Mpreprocess
+  # Use the correct MPI compilers
+  FF = $(NVIDIA_HPC_PATH)/comm_libs/hpcx/bin/mpif90
+  CC = $(NVIDIA_HPC_PATH)/comm_libs/hpcx/bin/mpicc
 
+  # Add rpath to ensure runtime library path is embedded in the executable
+  RPATH_FLAGS = -Wl,-rpath,$(HPCX_PATH)/ompi/lib
+
+  FFLAGS = -O3 -tp=broadwell -Mfree
+  FFLAGS += -Mpreprocess $(RPATH_FLAGS)
   CPP = /lib/cpp -traditional
-
   # Build for a specific GPU Vendor
   FFLAGS += -D__HIP_PLATFORM_NVIDIA__
-
   ifneq (,$(findstring OPENMP,$(CPPFLAGS)))
-    FFLAGS += -gpu=sm_75 -mp=gpu
+    FFLAGS += -gpu=sm_80 -mp=gpu
   endif
-
   ifneq (,$(findstring DOUBLE_PREC,$(CPPFLAGS)))
     FFLAGS += -Mr8
   endif
-
   # Build with HIP for a specific GPU Vendor
   CPPFLAGS += -D__HIP_PLATFORM_NVIDIA__
-
-  # hipfort paths ... NEEDS TO BE CUSTOMIZED
-  #HIP_BASE_PATH=/gpfs/alpine2/stf006/world-shared/nichols/HIPFORT/INSTALLATION/hipfort_v5.5.1/NVHPC_23.9
+  # hipfort paths
   HIP_BASE_PATH=/workspace/hipfort_v6.2.0/NVHPC_23.9
   HIP_LIB_PATH=$(HIP_BASE_PATH)/lib
   HIP_INC_PATH=$(HIP_BASE_PATH)/include/hipfort/nvptx
-
   OTHER_LIBS += -L$(HIP_LIB_PATH)
-  OTHER_LIBS += -lhipfort-nvptx -cudalib=cufft
-
+  OTHER_LIBS += -lhipfort-nvptx -cudalib=cufft -L$(HPCX_PATH)/ompi/lib
   OTHER_INC += -I$(HIP_INC_PATH)
-
   FFLAGS90 = $(FFLAGS)
-
   MOD_BIN = -module=$(OBJBIN) -I$(OBJBIN)/
 endif
 #######################################################################
-
-
 include makefile_pieces/makefile_build_rules
-
-
 include makefile_pieces/makefile_basic_rules
-
